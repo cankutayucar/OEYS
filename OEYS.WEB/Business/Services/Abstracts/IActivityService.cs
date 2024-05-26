@@ -16,7 +16,7 @@ namespace OEYS.WEB.Business.Services.Abstracts
         Task<CustomResponse<(IEnumerable<ApprovalActivityDto>, int)>> GetApprovalActivitiesPaginationAndSearching(int pageNumber, int pageSize);
         Task<CustomResponse<CustomNoResponse>> ApproveAndRejectActivity(ApproveAndRejectActivityDto dto);
 
-
+         
 
         Task<CustomResponse<(bool, string)>> SubscribeActivity(int id);
         Task<CustomResponse<(IEnumerable<ActivityDto>, int)>> GetSubscribeActivitiesPaginationAndSearching(int pageNumber, int pageSize, string? searchValue, string? sortColumn, string? sortColumnDirection);
