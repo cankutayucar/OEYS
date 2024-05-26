@@ -1,0 +1,430 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal fade" id="DetailModalCenter" tabindex="-1" role="dialog" aria-labelledby="DetailModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailModalLongTitle">Etkinlik Detayı</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        Etkinlik Adı: <input type="text" class="form-control" readonly id="ActivityName" />
+                    </div>
+                    <div class="row">
+                        Etkinlik Açıklaması: <textarea class="form-control" readonly id="ActivityDescription"></textarea>
+                    </div>
+                    <div class="row">
+                        Etkinlik Zamanı: <input type="datetime" class="form-control" readonly id="ActivityTime" />
+                    </div>
+                    <div class="row">
+                        Etkinlik Türü: <input type="text" class="form-control" readonly id="ActivityType" />
+                    </div>
+                    <div class="row">
+                        Etkinliğe Toplam Katılımcı Sayıcı: <input type="text" class="form-control" readonly id="ActivityTotalParticipiantCount" />
+                    </div>
+                    <div class="row mt-3">
+                        <div class="card" style="width:100%;">
+                            <h5 class="card-header">Katılımcılar</h5>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <div >
+                                        <table id="ActivityDetailUserDatatable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th>Surname</th>
+                                                    <th>UserName</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                @* <button type="button" class="btn btn-primary">Kaydet</button> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddModalCenter" tabindex="-1" role="dialog" aria-labelledby="AddModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddModalLongTitle">Etkinlik Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        Etkinlik Adı: <input type="text" class="form-control" id="ActivityNameAdd" required/>
+                    </div>
+                    <div class="row">
+                        Etkinlik Açıklaması: <textarea class="form-control" id="ActivityDescriptionAdd" required></textarea>
+                    </div>
+                    <div class="row">
+                        Etkinlik Zamanı: <input type="date" class="form-control" id="ActivityTimeAdd" required />
+                    </div>
+                    <div class="row">
+                        Etkinlik Türü: <select id="activitySelect" class="form-control" required>
+                            <option value="">Etkinlik Türünü Seçiniz...</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" id="btnAvtivityAdd" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UpdateModalCenter" tabindex="-1" role="dialog" aria-labelledby="UpdateModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="UpdateModalLongTitle">Etkinlik Düzenle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <input type="hidden" id="UpdateActivityId"/>
+                    <div class="row">
+                        Etkinlik Adı: <input type="text" class="form-control" id="ActivityNameUpdate" required />
+                    </div>
+                    <div class="row">
+                        Etkinlik Açıklaması: <textarea class="form-control" id="ActivityDescriptionUpdate" required></textarea>
+                    </div>
+                    <div class="row">
+                        Etkinlik Zamanı: <input type="date" class="form-control" id="ActivityTimeUpdate" required />
+                    </div>
+                    <div class="row">
+                        Etkinlik Türü: <select id="activitySelectUpdate" class="form-control" required>
+                            <option value="">Etkinlik Türünü Seçiniz...</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" id="btnAvtivityUpdate" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        <table id="ActivityDatatable" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Etkinlik Zamanı</th>
+                    <th>Etkinlik Tipi</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        let parameters;
+        $(document).ready(function () {
+
+            $('#btnAvtivityAdd').click(function () {
+                let request = {
+                    name: $('#ActivityNameAdd').val(),
+                    description: $('#ActivityDescriptionAdd').val(),
+                    activityTime: $('#ActivityTimeAdd').val(),
+                    activityType: $('#activitySelect').val()
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Activity/Create",
+                    dataType: "json",
+                    data: { request: request },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire("Etkinlik Başarıyla Eklendi");
+                            $("#ActivityDatatable").DataTable().ajax.reload();
+                            $('#AddModalCenter').modal('hide');
+                        }
+                        else {
+                            Swal.fire("Etkinlik eklenirken bir hata oluştu.");
+                        }
+                    }
+                });
+                $('#ActivityDatatable').DataTable().ajax.reload();
+
+            });
+
+            $('#btnAvtivityUpdate').click(function () {
+                let request = {
+                    id: $('#UpdateActivityId').val(),
+                    name: $('#ActivityNameUpdate').val(),
+                    description: $('#ActivityDescriptionUpdate').val(),
+                    activityTime: $('#ActivityTimeUpdate').val(),
+                    activityType: $('#activitySelectUpdate').val()
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Activity/Update",
+                    dataType: "json",
+                    data: { request: request },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire("Etkinlik Başarıyla Güncellendi");
+                            $("#ActivityDatatable").DataTable().ajax.reload();
+                            $('#UpdateModalCenter').modal('hide');
+                        }
+                        else {
+                            Swal.fire("Etkinlik güncellenirken bir hata oluştu.");
+                        }
+                    }
+                });
+            });
+
+            $("#ActivityDatatable").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "pageLength": 5,
+                "buttons": [
+                    {
+                        text: 'Yenile',
+                        className: 'btn btn-secondary',
+                        action: function (e, dt, node, config) {
+                            dt.ajax.reload();
+                        }
+                    },
+                    {
+                        text: 'Etkinlik Ekle',
+                        className: 'btn btn-success',
+                        action: function (e, dt, node, config) {
+                            $.ajax({
+                                type: "GET",
+                                url: "/Activity/GetActivities",
+                                dataType: "json",
+                                success: function (data) {
+                                    var $select = $('#activitySelect');
+                                    $select.empty().append('<option value="">Etkinlik Türünü Seçiniz...</option>');
+                                    $.each(data, function (key, value) {
+                                        $select.append($('<option>', {
+                                            value: key,
+                                            text: value
+                                        }));
+                                    });
+                                }
+                            });
+                            $('#AddModalCenter').modal('show');
+                        }
+                    }
+                ],
+                "ajax": {
+                    "url": "/Activity/GetAllActivities",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                    "orderable": false
+                }, { "targets": [1], "orderable": false }, { "targets": [2], "orderable": false }, { "targets": [3], "orderable": true }, { "targets": [4], "orderable": false }, { "targets": [5], "orderable": false }],
+                "columns": [
+                    { "data": "id", "name": "Id", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    {
+                        "data": "description", "name": "Description", "autoWidth": true, "render": function (data, type, row) {
+                            return data.substring(0, 10) + '...';
+                        }
+                    },
+                    {
+                        "data": "activityTime", "name": "ActivityTime", "autoWidth": true, "render": function (data, type, row) {
+                            return formatDate(data);
+                        }
+                    },
+                    { "data": "activityType", "name": "ActivityType", "autoWidth": true },
+                    {
+                        "render": function (data, type, row) { return "<a href='#' class='btn btn-danger' onclick=DeleteActivity('" + row.id + "'); >Sil</a> <a href='#' class='btn btn-success' onclick=UpdateActivityGetDetail('" + row.id + "'); >Düzenle</a> <a href='#' class='btn btn-secondary' onclick=DetailActivity('" + row.id + "'); >Detay Görüntüle</a>"; }
+                    },
+                ],
+                "dom": 'Bfrtip',
+            });
+
+        });
+
+        function formatDate(isoString) {
+            var date = new Date(isoString);
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (day < 10) {
+                day = '0' + day;
+            }
+            if (month < 10) {
+                month = '0' + month;
+            }
+            return day + '/' + month + '/' + year;
+        }
+
+        function DeleteActivity(id) {
+            var request = {
+                id: id
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Activity/DeleteActivity",
+                dataType: "json",
+                data: { request: request },
+                success: function (data) {
+                    if (data.success) {
+                        Swal.fire("Etkinlik Başarıyla Silindi");
+                        $("#ActivityDatatable").DataTable().ajax.reload();
+                    }
+                    else {
+                        Swal.fire("Etkinlik silinirken bir hata oluştu.");
+                    }
+                }
+            });
+        }
+
+        function UpdateActivityGetDetail(id){
+            $.ajax({
+                type: "GET",
+                url: "/Activity/GetActivityDetailForUpdate",
+                dataType: "json",
+                data: { id: id },
+                success: function (data) {
+                    $("#UpdateActivityId").val(data.activity.id);
+                    $("#ActivityNameUpdate").val(data.activity.name);
+                    $("#ActivityDescriptionUpdate").val(data.activity.description);
+                    $("#ActivityTimeUpdate").val(formatDateForModal(data.activity.activityTime));
+
+                    var $select = $('#activitySelectUpdate');
+                    $select.empty().append('<option value="">Etkinlik Türünü Seçiniz...</option>');
+
+                    $.each(data.activityTypes, function (key, value) {
+                        $select.append($('<option>', {
+                            value: key,
+                            text: value
+                        }));
+                    });
+
+                    $select.val(data.activity.activityType);
+
+                    $('#UpdateModalCenter').modal('show');
+                }
+            });
+        }
+
+        function formatDateForModal(dateString) {
+            var date = new Date(dateString);
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2); 
+            var day = ('0' + date.getDate()).slice(-2);
+            return `${year}-${month}-${day}`;
+        }
+
+        function DetailActivity(id) {
+            parameters = id;
+            $.ajax({
+                type: "POST",
+                url: "/Activity/Detail",
+                dataType: "json",
+                data: { id: id },
+                success: function (data) {
+                    $("#ActivityName").val(data.name);
+                    $("#ActivityDescription").val(data.description);
+                    $("#ActivityTime").val(formatDate(data.activityTime));
+                    $("#ActivityType").val(data.activityType);
+                    $("#ActivityTotalParticipiantCount").val(data.totalParticipiantCount);
+                    makeDatatable();
+                    $('#DetailModalCenter').modal('show');
+                }
+            });
+        }
+
+        function makeDatatable() {
+            $('#ActivityDetailUserDatatable').DataTable().destroy();
+            $("#ActivityDetailUserDatatable").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "pageLength": 5,
+                "buttons": [
+                    {
+                        text: 'Yenile',
+                        className: 'btn btn-secondary',
+                        action: function (e, dt, node, config) {
+                            dt.ajax.reload();
+                        }
+                    }
+                ],
+                "ajax": {
+                    "url": "/Activity/GetUsersForActivity",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.activityId = parameters;
+                    }
+                },
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                    "orderable": false
+                }, { "targets": [1], "orderable": false }, { "targets": [2], "orderable": false }, { "targets": [3], "orderable": false }],
+                "columns": [
+                    { "data": "id", "name": "Id", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "surname", "name": "Surname", "autoWidth": true },
+                    { "data": "userName", "name": "UserName", "autoWidth": true }                    
+                ],
+                "dom": 'Bfrtip'
+            });
+
+        }
+    </script>
+
+
+
+
+
+
+
+}
+
+
